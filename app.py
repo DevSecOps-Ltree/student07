@@ -228,7 +228,7 @@ def view_file():
             </html>
             '''
         except Exception as e:
-            return f'<p>Error: {str(e)}</p><p><a href="/">Back</a></p>'
+            return '<p>An error occurred while processing your request. Please try again later.</p><p><a href="/">Back</a></p>'
     else:
         return '''
         <html>
