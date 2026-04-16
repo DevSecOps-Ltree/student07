@@ -91,7 +91,7 @@ def search():
                 output += f'<li>Username: {row[0]}, Email: {row[1]}</li>'
             output += '</ul>'
         except Exception as e:
-            output = f'<p>Error: {str(e)}</p>'
+            output = '<p>An error occurred while processing your request. Please try again later.</p>'
 
         return f'''
         <html>
@@ -229,7 +229,7 @@ def view_file():
             </html>
             '''
         except Exception as e:
-            return f'<p>Error: {str(e)}</p><p><a href="/">Back</a></p>'
+            return '<p>An error occurred while processing your request. Please try again later.</p><p><a href="/">Back</a></p>'
     else:
         return '''
         <html>
