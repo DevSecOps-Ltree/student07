@@ -11,7 +11,6 @@ import os
 import pickle
 import base64
 import hashlib
-import subprocess
 
 app = Flask(__name__)
 
@@ -91,7 +90,7 @@ def search():
                 output += f'<li>Username: {row[0]}, Email: {row[1]}</li>'
             output += '</ul>'
         except Exception as e:
-            output = '<p>An error occurred while processing your request. Please try again later.</p>'
+            output = f'<p>Error: {str(e)}</p>'
 
         return f'''
         <html>
@@ -169,12 +168,8 @@ def ping():
     host = request.args.get('host', '')
 
     if host:
-        # FIXED: Use subprocess with a list and validate input
-        try:
-            result = subprocess.run(['ping', '-c', '3', host], capture_output=True, text=True, check=True)
-            output = result.stdout
-        except subprocess.CalledProcessError as e:
-            output = f"Error: {e}"
+        # VULNERABLE: Unsanitized input to shell command
+        result = os.popen(f'ping -c 3 {host}').read()
         return f'''
         <html>
         <body>
@@ -184,7 +179,7 @@ def ping():
                 <input type="submit" value="Ping">
             </form>
             <h2>Result:</h2>
-            <pre>{output}</pre>
+            <pre>{result}</pre>
             <p><a href="/">Back</a></p>
         </body>
         </html>
@@ -228,7 +223,7 @@ def view_file():
             </html>
             '''
         except Exception as e:
-            return '<p>An error occurred while processing your request. Please try again later.</p><p><a href="/">Back</a></p>'
+            return f'<p>Error: {str(e)}</p><p><a href="/">Back</a></p>'
     else:
         return '''
         <html>
